@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "projects": {
+    "kube": {
+      "projectType": "application",
+      "root": "apps/kube",
+      "sourceRoot": "apps/kube/src",
+      "prefix": "kube-ws",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/kube",
+            "index": "apps/kube/src/index.html",
+            "main": "apps/kube/src/main.ts",
+            "polyfills": "apps/kube/src/polyfills.ts",
+            "tsConfig": "apps/kube/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": ["apps/kube/src/favicon.ico", "apps/kube/src/assets"],
+            "styles": ["apps/kube/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/kube/src/environments/environment.ts",
+                  "with": "apps/kube/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "kube:build:production"
+            },
+            "development": {
+              "browserTarget": "kube:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "kube:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/kube/src/**/*.ts",
+              "apps/kube/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/kube"],
+          "options": {
+            "jestConfig": "apps/kube/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "kube-e2e": {
+      "root": "apps/kube-e2e",
+      "sourceRoot": "apps/kube-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/kube-e2e/cypress.json",
+            "devServerTarget": "kube:serve:development"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "kube:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/kube-e2e/**/*.{js,ts}"]
+          }
+        }
+      },
+      "tags": [],
+      "implicitDependencies": ["kube"]
+    }
+  }
+}
